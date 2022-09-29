@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
+import { useState } from "react";
+import SearchBar from "./components/SearchBar";
+import SearchList from "./components/SearchList";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIVABDn3ZZJIiSt3HhDgtZPa3hcueYqKw",
@@ -14,9 +17,16 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 function App() {
+  const [terms, setTerms] = useState([])
+
+  const onSubmit = (data) => {
+   setTerms(data)
+  }
+
   return (
     <div className="App">
-
+      <SearchBar submit={onSubmit} />
+      <SearchList terms={terms} />
     </div>
   );
 }
