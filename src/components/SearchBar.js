@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const SearchBar = ({submit}) => {
+export const SearchBar = ({submit}) => {
   const [input, setInput] = useState([])
 
   const handleChange = (e) => {
@@ -11,7 +12,10 @@ const SearchBar = ({submit}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     submit(input);
+    navigate('/search')
   }
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -20,11 +24,10 @@ const SearchBar = ({submit}) => {
           onChange={handleChange}
           placeholder="Search books" 
           value={input}  
+          className="border-2 border-[#DCD6CC] border-solid rounded-sm w-100"
         />
-        <button className="" ></button>
+        <button className="bg-[url('assets/search.png')] bg-no-repeat bg-center text-transparent m-2 -mx-10">search</button>
       </form>
     </>
   )
 }
-
-export default SearchBar;

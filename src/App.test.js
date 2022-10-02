@@ -1,40 +1,29 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import App from './App';
+import App from './App.js'
 
-describe("Search List", () => {
-  const mockResponse = {
-    items: [
-      {
-        volumeInfo: {
-          title: "good book",
-          authors: {
-            0: "good author"
-          }
-        }
-      }
-    ]
-  };
-
-  beforeEach(() => {
-    jest.spyOn(global, "fetch").mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockResponse)
-    });
-  });
+describe("App", () => {
+  // beforeEach(() => {
+  //   jest.spyOn(global, "fetch").mockResolvedValue({
+  //     json: jest.fn().mockResolvedValue(mockResponse)
+  //   });
+  // });
   
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
+  // afterEach(() => {
+  //   jest.restoreAllMocks();
+  // });
 
-  it("renders list of books", async () => {
-    const container = document.createElement('div');
+  it("renders home page feed", async () => {
     await act(async () => {
-      render(<App />, container);
+      render(<App />);
     })
-    const title = screen.getByText("good book")
-    const author = screen.getByText("good author")
-    expect(title.textContent).toBe("good book")
-    expect(author.textContent).toBe("good author")
+   
+    // const title = screen.getByText("not bad book")
+    // const author0 = screen.getByText("good author")
+    // const author1 = screen.getByText("not bad author")
+    // expect(title.textContent).toBe("not bad book")
+    // expect(author0.textContent).toBe("good author")
+    // expect(author1.textContent).toBe("not bad author")
   });
 })
