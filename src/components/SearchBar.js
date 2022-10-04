@@ -24,7 +24,7 @@ export const SearchBar = ({submit}) => {
           onChange={handleChange}
           placeholder="Search books" 
           value={input}  
-          className="border-2 border-[#DCD6CC] border-solid rounded-sm w-100"
+          className="border-2 border-[#DCD6CC] border-solid rounded w-100"
         />
         <button className="bg-[url('assets/search.png')] bg-no-repeat bg-center text-transparent m-2 -mx-10">search</button>
       </form>

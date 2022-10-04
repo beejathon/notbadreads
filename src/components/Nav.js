@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ProfileMenu } from "./ProfileMenu";
 import { SearchBar } from "./SearchBar";
 
 export const Nav = ({onSubmit}) => {
@@ -14,6 +15,7 @@ export const Nav = ({onSubmit}) => {
         <Link to='/'>Home</Link>
         <Link to='/'>My Books</Link>
         <SearchBar submit={onSubmit}/>
+        <ProfileMenu />
       </nav>
     </header>
   )
