@@ -5,7 +5,7 @@ export const SearchList = ({books}) => {
   return (
     <>
       {books?.map(book => (
-        <BookCard key={book.id} book={book.volumeInfo} />
+        <BookCard key={book.id} id={book.id} book={book.volumeInfo} />
       ))}
     </>   
   )

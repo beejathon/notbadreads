@@ -11,6 +11,7 @@ import { Nav } from "./components/Nav";
 import { cleanData } from "./helpers/helpers";
 import { auth } from "./config/firebase";
 import { SignIn } from "./components/SignIn";
+import { BookDetail } from "./components/BookDetail";
 
 function App() {
   const [terms, setTerms] = useState([])
@@ -36,16 +37,17 @@ function App() {
   }, [fetchBooks])
 
   return (
-    <div className="App bg-[rgba(244,241,234,0.5)]">
+    <div className="bg-[rgba(244,241,234,0.5)] w-100">
       { user 
-      ? <Router>
-          <Nav onSubmit={onSubmit}/>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<SearchList books={books} />} />
-          </Routes>
-        </Router>
-      : <SignIn />
+        ? <Router>
+            <Nav onSubmit={onSubmit}/>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<SearchList books={books} />} />
+              <Route path="/books/:id" element={<BookDetail />} />
+            </Routes>
+          </Router>
+        : <SignIn />
       }
     </div>
   );
