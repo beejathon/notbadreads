@@ -1,6 +1,7 @@
 import oops from '../assets/oops.jpg';
 import { FaStar } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
+import { BookButton } from './BookButton';
 
 export const BookCard = ({book, id}) => {
   return (
@@ -37,6 +38,7 @@ export const BookCard = ({book, id}) => {
               })}
             </div>
           }
+        <BookButton book={id} />
         <div className='flex flex-row cursor-pointer p-2'>
           <FaStar />    
           <FaStar />    

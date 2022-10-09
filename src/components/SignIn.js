@@ -1,7 +1,8 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import google from "../assets/google_signin.png"
+import { doc, setDoc } from "firebase/firestore";
 
 export const SignIn = () => {
   const signInWithGoogle = async () => {
@@ -10,6 +11,11 @@ export const SignIn = () => {
       prompt: 'select_account'
     });
     await signInWithPopup(auth, provider);
+    await setDoc(doc(db, 'users', auth.currentUser.uid), {
+      id: auth.currentUser.uid,
+      name: auth.currentUser.displayName,
+      email: auth.currentUser.email
+    })
   }
 
   return (
