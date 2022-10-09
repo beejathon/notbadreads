@@ -1,0 +1,31 @@
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import React, { useCallback, useEffect, useState } from "react";
+import { db } from "../config/firebase";
+import { Review } from "./Review";
+
+export const ReviewsList = ({id}) => {
+  const [reviews, setReviews] = useState(null)
+
+  const fetchReviews = useCallback(async () => {
+    const q = query(
+      collection(db, 'reviews'),
+      where('id', '==', id),
+      orderBy('added')
+    );
+    const reviewsRef = await getDocs(q)
+    setReviews(reviewsRef.docs)
+  }, [id]) 
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews])
+
+  return (
+    <div id="reviewsContainer" className="flex flex-col h-full w-screen items-center">
+      { reviews?.map((review) => {
+          return <Review key={id} review={review.data()} />
+        })
+      }
+    </div>
+  )
+}

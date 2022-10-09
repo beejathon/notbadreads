@@ -3,7 +3,7 @@ import React from "react";
 export const Home = () => {
   return (
     <>
-      <div>
+      <div className="h-screen">
         TODO: Home page feed
       </div>
     </>

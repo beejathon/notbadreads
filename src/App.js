@@ -12,6 +12,7 @@ import { cleanData } from "./helpers/helpers";
 import { auth } from "./config/firebase";
 import { SignIn } from "./components/SignIn";
 import { BookDetail } from "./components/BookDetail";
+import { ReviewEdit } from "./components/ReviewEdit";
 
 function App() {
   const [terms, setTerms] = useState([])
@@ -37,7 +38,7 @@ function App() {
   }, [fetchBooks])
 
   return (
-    <div className="bg-[rgba(244,241,234,0.5)] w-100">
+    <div className="bg-[rgba(244,241,234,0.5)] w-screen">
       { user 
         ? <Router>
             <Nav onSubmit={onSubmit}/>
@@ -45,6 +46,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/search" element={<SearchList books={books} />} />
               <Route path="/books/:id" element={<BookDetail />} />
+              <Route path="/review/edit/:id" element={<ReviewEdit />} />
+              {/* <Route path="/users/:id" element={<Profile />} /> */}
             </Routes>
           </Router>
         : <SignIn />

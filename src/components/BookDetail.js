@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { ReviewsList } from "./ReviewsList";
 
 export const BookDetail = () => {
   const [book, setBook] = useState(null);
@@ -19,13 +20,13 @@ export const BookDetail = () => {
   }, [fetchBook])
 
   return (
-    <>
+    <div id="bookContainer" className="flex flex-col h-auto">
       { book 
-        ? <div className="flex flex-row p-2 m-2 h-screen">
+        ? <div className="flex flex-row p-2 m-2">
             <img 
               src={book.imageLinks.thumbnail} 
               alt={book.title} 
-              className="object-scale-down leading-none"
+              className="object-scale-down leading-none place-self-start"
             />
             <div className="flex flex-col m-2">
               <div>
@@ -54,10 +55,16 @@ export const BookDetail = () => {
               <div>{book.pageCount}</div>  
               <div>{book.publishedDate}</div>  
               <div>{book.publisher}</div>  
+              <Link to={`/review/edit/${id}`}>
+                <button className="place-self-center rounded-md m-2 p-1 border-[#D6D0C4] border-[0.3px] bg-[#F4F1EA]">
+                  Write a review
+                </button>
+              </Link>
             </div>
           </div>
         : <div>Loading...</div> 
       }
-    </>
+      <ReviewsList id={id} />
+    </div>
   );
 }
