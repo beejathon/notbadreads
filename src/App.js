@@ -13,6 +13,7 @@ import { auth } from "./config/firebase";
 import { SignIn } from "./components/SignIn";
 import { BookDetail } from "./components/BookDetail";
 import { ReviewEdit } from "./components/ReviewEdit";
+import { Profile } from "./components/Profile";
 
 function App() {
   const [terms, setTerms] = useState([])
@@ -47,7 +48,7 @@ function App() {
               <Route path="/search" element={<SearchList books={books} />} />
               <Route path="/books/:id" element={<BookDetail />} />
               <Route path="/review/edit/:id" element={<ReviewEdit />} />
-              {/* <Route path="/users/:id" element={<Profile />} /> */}
+              <Route path="/users/:id" element={<Profile />} />
             </Routes>
           </Router>
         : <SignIn />

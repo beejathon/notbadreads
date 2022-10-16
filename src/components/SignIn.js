@@ -14,7 +14,10 @@ export const SignIn = () => {
     await setDoc(doc(db, 'users', auth.currentUser.uid), {
       id: auth.currentUser.uid,
       name: auth.currentUser.displayName,
-      email: auth.currentUser.email
+      icon: auth.currentUser.photoURL,
+      email: auth.currentUser.email,
+      location: null,
+      about: null,
     })
   }
 

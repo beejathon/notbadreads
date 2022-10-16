@@ -1,12 +1,12 @@
 import { collection, doc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { auth, db } from "../config/firebase";
 import { StarRating } from "./StarRating";
 
 export const ReviewEdit = () => {
   const [rating, setRating] = useState(null);
-  const [text, setText] = useState('Enter your review (optional)');
+  const [text, setText] = useState([]);
   const [book, setBook] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -66,16 +66,18 @@ export const ReviewEdit = () => {
   }, [fetchBook, fetchReview])
 
   return (
-    <div id="reviewEditContainer" className="flex flex-col h-screen">
+    <div id="reviewEditContainer" className="flex flex-col h-screen w-8/12">
       { book
         ? <div 
             id="reviewEditHeader" 
             className="flex flex-row p-2 m-2">
-            <img 
-              src={book.imageLinks.thumbnail} 
-              alt={book.title} 
-              className="object-scale-down leading-none"
-            />
+            <Link to={`/books/${id}`}>
+              <img 
+                src={book.imageLinks.thumbnail} 
+                alt={book.title} 
+                className="object-scale-down leading-none"
+              />
+            </Link>
             <div className="flex flex-col m-2">
               <div>
                 <span className="text-2xl font-bold">{book.title}</span>
@@ -101,19 +103,22 @@ export const ReviewEdit = () => {
         : null
       }
       <div id="reviewEditBody" className="flex flex-col m-2 p-2 h-screen">
-        <div id="reviewRating" className="mb-2">
+        <div id="reviewRating" className="flex flex-row gap-1 items-center mb-2">
+          <span>My rating:</span>
           <StarRating rating={rating} onRatingSelect={onRatingSelect} />
         </div>
+        <div id="separator" className="border-b-[0.8px] border-[#eee] text-[14px] text-[#181818] mb-2"></div>
         <div id="reviewTextInput">
-          <input 
-            className="bg-[#FFFFFF] border-[#DCD6CC] border-[1px] rounded-[3px] resize-y w-8/12 h-80 text-start align-text-top inline-block"
+          <p>What did you think?</p>
+          <textarea 
+            className="bg-[#FFFFFF] border-[#DCD6CC] border-[1px] rounded-[3px] resize-y w-full h-80 text-start align-text-top inline-block"
             onChange={handleChange} 
-            type="textarea" 
+            placeholder="Enter your review (optional)"
             value={text} />
         </div>
         <button 
           onClick={handleSubmit}
-          className="place-self-start rounded-md m-2 p-1 border-[#D6D0C4] border-[0.3px] bg-[#F4F1EA]">
+          className="place-self-start rounded-md m-2 p-1 border-[#D6D0C4] border-[0.3px] bg-[#F4F1EA] hover:bg-[#ede6d6]">
             Post
         </button>
       </div>

@@ -38,7 +38,7 @@ export const BookCard = ({book, id}) => {
               })}
             </div>
           }
-        <BookButton book={id} />
+        <BookButton book={book} id={id} />
         <div className='flex flex-row cursor-pointer p-2'>
           <FaStar />    
           <FaStar />    

@@ -20,7 +20,7 @@ export const StarRating = ({rating, onRatingSelect}) => {
             onMouseEnter={() => setHover(index)}
             onMouseLeave={() => setHover(rating)}
           >
-            <span id="star">&#9733;</span>
+            <span id={star}>&#9733;</span>
           </button>
         );
       })}

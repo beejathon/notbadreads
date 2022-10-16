@@ -1,9 +1,25 @@
+@import url(//db.onlinewebfonts.com/c/e1e124010c3148f5413c174ac6b00e2b?family=NimbusSansNovusW01-Regular);
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {font-family: "NimbusSansNovusW01-Regular"; src: url("//db.onlinewebfonts.com/t/e1e124010c3148f5413c174ac6b00e2b.eot"); src: url("//db.onlinewebfonts.com/t/e1e124010c3148f5413c174ac6b00e2b.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/e1e124010c3148f5413c174ac6b00e2b.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/e1e124010c3148f5413c174ac6b00e2b.woff") format("woff"), url("//db.onlinewebfonts.com/t/e1e124010c3148f5413c174ac6b00e2b.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/e1e124010c3148f5413c174ac6b00e2b.svg#NimbusSansNovusW01-Regular") format("svg"); } 
 
 @layer base {
   html {
     font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
+  }
+}
+
+@layer components {
+  .logo-left {
+    font-family: "NimbusSansNovusW01-Regular";
+    font-size: 32px;
+    color: #382110;
+  }
+  .logo-right {
+    font-family: "NimbusSansNovusW01-Regular";
+    font-size: 32px;
+    font-weight: 1000;
+    color: #382110;
   }
 }

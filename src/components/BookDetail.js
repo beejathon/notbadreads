@@ -20,13 +20,13 @@ export const BookDetail = () => {
   }, [fetchBook])
 
   return (
-    <div id="bookContainer" className="flex flex-col h-auto">
+    <div id="bookContainer" className="flex flex-col h-auto w-screen items-center">
       { book 
-        ? <div className="flex flex-row p-2 m-2">
+        ? <div className="flex flex-row p-2 m-2 w-8/12">
             <img 
               src={book.imageLinks.thumbnail} 
               alt={book.title} 
-              className="object-scale-down leading-none place-self-start"
+              className="mr-4 object-scale-down leading-none place-self-start shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
             />
             <div className="flex flex-col m-2">
               <div>
@@ -48,18 +48,26 @@ export const BookDetail = () => {
                     })}
                   </div>
                 }
+              <div id="rating">
+                {/* { <>
+                    {[...Array(5)].map((star, index) => {
+                      index +=1;
+                      return (
+                      <span id={star} className={index <= review.rating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
+                      )
+                    })}
+                  </>
+                } */}
+              </div>
               <div 
                 dangerouslySetInnerHTML={ {__html: book.description} } 
-                className="mt-4"  
+                className="mt-4 mb-2"  
               />
-              <div>{book.pageCount}</div>  
-              <div>{book.publishedDate}</div>  
-              <div>{book.publisher}</div>  
-              <Link to={`/review/edit/${id}`}>
-                <button className="place-self-center rounded-md m-2 p-1 border-[#D6D0C4] border-[0.3px] bg-[#F4F1EA]">
-                  Write a review
-                </button>
-              </Link>
+              <div className="text-[#333] text-[13px]">{book.pageCount} pages</div>  
+              <div className="text-[#333] text-[13px]">Published {book.publishedDate} by {book.publisher}</div>
+              <button className="place-self-start rounded-[3px] mt-4 p-1 border-[#D6D0C4] border-[0.3px] bg-[#F4F1EA] hover:bg-[#ede6d6] text-[#333] text-[14px] pt-[8px] pb-[8px] pl-[12px] pr-[12px]">
+                <Link to={`/review/edit/${id}`}>Write a review</Link>
+              </button>
             </div>
           </div>
         : <div>Loading...</div> 
