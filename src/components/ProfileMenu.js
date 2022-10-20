@@ -3,6 +3,8 @@ import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { auth, db } from "../config/firebase";
+import placeholder from "../assets/profile_icon.png"
+import { addSizeToGoogleProfilePic } from "../helpers/helpers";
 
 export const ProfileMenu = () => {
   const [clicked, setClicked] = useState(false);
@@ -20,8 +22,9 @@ export const ProfileMenu = () => {
   const syncUser = async () => {
     const user = await getDoc(doc(db, 'users', auth.currentUser.uid))
     if (user.exists) {
+      const icon = addSizeToGoogleProfilePic(user.data().icon)
       setUserName(user.data().name)
-      setUserIcon(user.data().icon)
+      setUserIcon(icon)
     }
   }
 
@@ -34,7 +37,7 @@ export const ProfileMenu = () => {
       <div 
         onClick={toggleMenu}>
         <img 
-          src={userIcon || auth.currentUser.photoURL || "assets/profile_placeholder.png"}
+          src={userIcon || placeholder }
           alt="profile pic"
           className="rounded-full w-9"
         />    
@@ -46,6 +49,7 @@ export const ProfileMenu = () => {
             ? 'absolute right-[-20px] top-[10px] flex flex-col w-[250px] gap-2 p-2 rounded-sm border-[0.8px] items-left bg-[#FFFFFF]'
             : 'hidden'
           } 
+          onMouseLeave={toggleMenu}
         >
           <div className="uppercase">
             {userName || auth.currentUser.displayName}

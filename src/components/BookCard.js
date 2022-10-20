@@ -1,11 +1,10 @@
 import oops from '../assets/oops.jpg';
-import { FaStar } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
 import { BookButton } from './BookButton';
 
 export const BookCard = ({book, id}) => {
   return (
-    <div className='flex flex-row m-2'>
+    <div className="flex flex-row m-2">
       <Link to={`/books/${id}`}>
         <img 
           src=
@@ -38,15 +37,23 @@ export const BookCard = ({book, id}) => {
               })}
             </div>
           }
-        <BookButton book={book} id={id} />
-        <div className='flex flex-row cursor-pointer p-2'>
-          <FaStar />    
-          <FaStar />    
-          <FaStar />    
-          <FaStar />    
-          <FaStar />    
+        <div className="flex flex-row p-2 items-center">
+          { 
+            <div className="flex flex-row">
+              {[...Array(5)].map((star, index) => {
+                index +=1;
+                return (
+                <span id={star} className={index <= book.averageRating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
+                )
+              })}
+            </div>
+          }
+          <span className="mx-2 text-[12px] text-[#999999]">
+            {book.averageRating ? `— ${book.averageRating} avg rating ` :'— No ratings'}
+            {book.ratingsCount ? `— ${book.ratingsCount} ratings` : null}
+          </span>  
         </div>
-        <div className='mx-2'>No ratings yet</div>
+        <BookButton book={book} id={id} />
       </div>
     </div>
   )

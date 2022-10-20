@@ -9,7 +9,7 @@ export const ReviewsList = ({id}) => {
   const fetchReviews = useCallback(async () => {
     const q = query(
       collection(db, 'reviews'),
-      where('id', '==', id),
+      where('book', '==', id),
       orderBy('added')
     );
     const reviewsRef = await getDocs(q)
@@ -23,7 +23,7 @@ export const ReviewsList = ({id}) => {
   return (
     <div id="reviewsContainer" className="flex flex-col h-full w-screen items-center">
       { reviews?.map((review) => {
-          return <Review key={id} review={review.data()} />
+          return <Review key={review.data().id} review={review.data()} />
         })
       }
     </div>

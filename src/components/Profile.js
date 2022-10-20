@@ -2,6 +2,7 @@ import { collection, doc, getDoc, getDocs, query, where } from "firebase/firesto
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { db } from "../config/firebase";
+import placeholder from "../assets/profile_icon.png"
 
 export const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -43,7 +44,7 @@ export const Profile = () => {
               <div id="headerLeft" className="flex flex-col gap-1">
                 <img 
                   className="rounded-full w-full"
-                  src={profile.icon || "assets/profile_placeholder.png"} alt={profile.name} />
+                  src={profile.icon != undefined ? profile.icon : placeholder} alt="profile icon" />
               </div>
               <div id="headerRight" className="flex flex-col">
                 <p className="font-[700] text-[20px]">

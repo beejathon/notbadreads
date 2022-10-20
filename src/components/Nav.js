@@ -8,7 +8,7 @@ export const Nav = ({onSubmit}) => {
     <header className="flex flex-row pl-6 bg-[#F4F1EA] items-center h-full shadow-[0px_1px_2px_0px_rgba(0,0,0,0.15)] mb-10">
       <div id="logo">
         <Link to='/'>
-          <span className="logo-left font-extralight">notbad</span>
+          <span className="logo-left">notbad</span>
           <span className="logo-right">reads</span>
         </Link>  
       </div>

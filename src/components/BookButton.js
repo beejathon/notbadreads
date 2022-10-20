@@ -30,8 +30,9 @@ export const BookButton = ({book, id}) => {
   }
 
   const addBook = async (shelf, bookRef) => {
+    let data;
     if (shelf === 'Favorites') {
-      await setDoc(bookRef, {
+      data = {
         id: id,
         cover: book.imageLinks.thumbnail,
         title: book.title,
@@ -39,9 +40,10 @@ export const BookButton = ({book, id}) => {
         shelf: ['Read', 'Favorites'],
         read: serverTimestamp(),
         added: serverTimestamp()
-      })
+      }
+      await setDoc(bookRef, data)
     } else if (shelf === 'Read') {
-      await setDoc(bookRef, {
+      data = {
         id: id,
         cover: book.imageLinks.thumbnail,
         title: book.title,
@@ -49,18 +51,21 @@ export const BookButton = ({book, id}) => {
         shelf: [shelf],
         read: serverTimestamp(),
         added: serverTimestamp()
-      })
+      }
+      await setDoc(bookRef, data)
     } else {
-      await setDoc(bookRef, {
+      data = {
         id: id,
         cover: book.imageLinks.thumbnail,
         title: book.title,
         author: book.authors,
         shelf: [shelf],
         added: serverTimestamp()
-      })
+      }
+      await setDoc(bookRef, data)
     }
     await syncStatus();
+    await updateFeed(shelf, bookRef);
   }
 
   const updateBook = async (shelf, bookRef) => {
@@ -99,6 +104,13 @@ export const BookButton = ({book, id}) => {
     if (book.exists()) status = book.data().shelf[0];
     setBookStatus(status);
   }, [id]) 
+
+  const updateFeed = async (shelf, bookRef) => {
+    // const book = await getDoc(bookRef)
+    // if (shelf === 'Read') {
+    //   await setDoc()
+    // }
+  }
 
   useEffect(() => {
     syncStatus();

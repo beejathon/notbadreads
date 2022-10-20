@@ -14,12 +14,13 @@
   .logo-left {
     font-family: "NimbusSansNovusW01-Regular";
     font-size: 32px;
+    font-weight: 200;
     color: #382110;
   }
   .logo-right {
     font-family: "NimbusSansNovusW01-Regular";
     font-size: 32px;
-    font-weight: 1000;
+    font-weight: 600;
     color: #382110;
   }
 }

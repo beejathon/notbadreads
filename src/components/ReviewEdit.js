@@ -33,7 +33,7 @@ export const ReviewEdit = () => {
     const q = query(
       collection(db, 'reviews'), 
       where('user', '==', auth.currentUser.uid),
-      where('id', '==', id)
+      where('book', '==', id)
       )
     const docs = await getDocs(q)
     docs.forEach((doc) => {
@@ -47,8 +47,9 @@ export const ReviewEdit = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await setDoc(doc(db, 'reviews', id), {
-      id: id,
+    const newReviewRef = doc(collection(db, 'reviews'))
+    await setDoc(newReviewRef, {
+      book: id,
       user: auth.currentUser.uid,
       userName: auth.currentUser.displayName,
       userIcon: auth.currentUser.photoURL,
@@ -56,7 +57,7 @@ export const ReviewEdit = () => {
       text: text,
       likes: [0],
       added: serverTimestamp()
-    })
+    })  
     navigate(`/books/${id}`)
   }
 
