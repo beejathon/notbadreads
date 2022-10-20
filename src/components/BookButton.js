@@ -1,10 +1,19 @@
-import { deleteDoc, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../config/firebase";
 
-export const BookButton = ({book, id}) => {
+export const BookButton = (
+  {
+  cover, 
+  title, 
+  subtitle, 
+  authors, 
+  id
+  }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [bookStatus, setBookStatus] = useState(null)
+  const [user] = useAuthState(auth)
 
   const displayMenu = () => {
     setShowMenu(true)
@@ -18,8 +27,7 @@ export const BookButton = ({book, id}) => {
     e.preventDefault();
     hideMenu();
     const shelf = e.target.id;
-    const user = auth.currentUser.uid;
-    const bookRef = doc(db, 'users', user, 'mybooks', id)
+    const bookRef = doc(db, 'users', user.uid, 'mybooks', id)
     const book = await getDoc(bookRef)
     if (!book.exists()) {
       addBook(shelf, bookRef);
@@ -34,9 +42,10 @@ export const BookButton = ({book, id}) => {
     if (shelf === 'Favorites') {
       data = {
         id: id,
-        cover: book.imageLinks.thumbnail,
-        title: book.title,
-        author: book.authors,
+        cover: cover,
+        title: title,
+        subtitle: subtitle,
+        author: authors,
         shelf: ['Read', 'Favorites'],
         read: serverTimestamp(),
         added: serverTimestamp()
@@ -45,9 +54,10 @@ export const BookButton = ({book, id}) => {
     } else if (shelf === 'Read') {
       data = {
         id: id,
-        cover: book.imageLinks.thumbnail,
-        title: book.title,
-        author: book.authors,
+        cover: cover,
+        title: title,
+        subtitle: subtitle,
+        author: authors,
         shelf: [shelf],
         read: serverTimestamp(),
         added: serverTimestamp()
@@ -56,16 +66,17 @@ export const BookButton = ({book, id}) => {
     } else {
       data = {
         id: id,
-        cover: book.imageLinks.thumbnail,
-        title: book.title,
-        author: book.authors,
+        cover: cover,
+        title: title,
+        subtitle: subtitle,
+        author: authors,
         shelf: [shelf],
         added: serverTimestamp()
       }
       await setDoc(bookRef, data)
     }
     await syncStatus();
-    await updateFeed(shelf, bookRef);
+    await updateFeed(shelf);
   }
 
   const updateBook = async (shelf, bookRef) => {
@@ -86,30 +97,70 @@ export const BookButton = ({book, id}) => {
       })
     }
     await syncStatus();
+    await updateFeed(shelf)
   }
 
   const unshelve = async () => {
-    const user = auth.currentUser.uid;
-    const bookRef = doc(db, 'users', user, 'mybooks', id);
+    const bookRef = doc(db, 'users', user.uid, 'mybooks', id);
     await deleteDoc(bookRef);
     await syncStatus();
   }
 
   const syncStatus = useCallback(async () => {
-    const user = auth.currentUser.uid;
     let status = null;
-    const bookRef = doc(db, 'users', user, 'mybooks', id)
+    const bookRef = doc(db, 'users', user.uid, 'mybooks', id)
     const book = await getDoc(bookRef)
     if (book.exists() && book.data().shelf.length > 1) status = 'Read';
     if (book.exists()) status = book.data().shelf[0];
     setBookStatus(status);
-  }, [id]) 
+  }, [user, id]) 
 
-  const updateFeed = async (shelf, bookRef) => {
-    // const book = await getDoc(bookRef)
-    // if (shelf === 'Read') {
-    //   await setDoc()
-    // }
+  const updateFeed = async (shelf) => {
+    const newUpdateRef = doc(collection(db, 'updates'));
+    let data;
+    if (shelf === 'Want to read') {
+      data = {
+        userId: user.uid,
+        userName: user.displayName,
+        userIcon: user.photoURL,
+        desc: 'wants to read',
+        bookId: id,
+        bookCover: cover,
+        bookTitle: title,
+        bookSubtitle: subtitle,
+        bookAuthors: authors,
+        added: serverTimestamp()
+      }
+    }
+    if (shelf === 'Currently reading') {
+      data = {
+        userId: user.uid,
+        userName: user.displayName,
+        userIcon: user.photoURL,
+        desc: 'started reading',
+        bookId: id,
+        bookCover: cover,
+        bookTitle: title,
+        bookSubtitle: subtitle,
+        bookAuthors: authors,
+        added: serverTimestamp()
+      }
+    }
+    if (shelf === 'Read') {
+      data = {
+        userId: user.uid,
+        userName: user.displayName,
+        userIcon: user.photoURL,
+        desc: 'finished reading',
+        bookId: id,
+        bookCover: cover,
+        bookTitle: title,
+        bookSubtitle: subtitle,
+        bookAuthors: authors,
+        added: serverTimestamp()
+      }
+    }
+    await setDoc(newUpdateRef, data)
   }
 
   useEffect(() => {
@@ -117,7 +168,7 @@ export const BookButton = ({book, id}) => {
   }, [syncStatus])
 
   return (
-    <div className="m-2 w-[180px] flex flex-row flex-auto h-[30px] justify-center items-between relative">
+    <div className="m-2 w-[180px] flex flex-row flex-0 h-[30px] justify-center items-between relative">
       { bookStatus === null
         ? <div 
             id="btnLeftUnshelved" 

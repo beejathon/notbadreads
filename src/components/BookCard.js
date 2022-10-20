@@ -53,7 +53,12 @@ export const BookCard = ({book, id}) => {
             {book.ratingsCount ? `— ${book.ratingsCount} ratings` : null}
           </span>  
         </div>
-        <BookButton book={book} id={id} />
+        <BookButton 
+          cover={book.imageLinks.thumbnail}
+          title={book.title}
+          subtitle={book.subtitle}
+          authors={book.authors} 
+          id={id} />
       </div>
     </div>
   )

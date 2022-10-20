@@ -1,13 +1,14 @@
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { db } from "../config/firebase";
 import placeholder from "../assets/profile_icon.png"
+import { UpdateCard } from "./UpdateCard";
 
 export const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [shelves, setShelves] = useState([]);
-  const [feed, setFeed] = useState([]);
+  const [updates, setUpdates] = useState([]);
   const {id} = useParams();
 
   const syncProfile = useCallback(async () => {
@@ -18,33 +19,35 @@ export const Profile = () => {
   
   const syncShelves = useCallback(async () => {
     const q = query(collection(db, 'users', id, 'mybooks'))
-    const shelves = await getDocs(q);
-    setShelves(shelves.docs);
+    const response = await getDocs(q);
+    setShelves(response.docs);
   }, [id]) 
 
-  const syncFeed = useCallback(async () => {
+  const syncUpdates = useCallback(async() => {
     const q = query(
       collection(db, 'updates'),
-      where('user', '==', id)
-    );
-    const feedRef = await getDocs(q);
-    console.log(feedRef)
-  }, [id]) 
+      where('userId', '==', id),
+      orderBy('added', 'desc')
+    )
+    const response = await getDocs(q)
+    setUpdates(response.docs)
+  }, [id])
 
   useEffect(() => {
     syncProfile();
     syncShelves();
-  }, [syncProfile, syncShelves])
+    syncUpdates();
+  }, [syncProfile, syncShelves, syncUpdates])
 
   return (
-    <div id="profileContainer" className="flex flex-col h-screen items-center">
+    <div id="profileContainer" className="flex flex-col h-screen items-center gap-8">
       <div id="profileHeader" className="flex flex-row mb-10 gap-4">
         { profile 
           ? <>
               <div id="headerLeft" className="flex flex-col gap-1">
                 <img 
                   className="rounded-full w-full"
-                  src={profile.icon != undefined ? profile.icon : placeholder} alt="profile icon" />
+                  src={profile.icon || placeholder} alt="profile icon" />
               </div>
               <div id="headerRight" className="flex flex-col">
                 <p className="font-[700] text-[20px]">
@@ -106,6 +109,17 @@ export const Profile = () => {
             })
           }
         </div>
+      </div>
+      <div id="updates" className="flex flex-col gap-8 w-3/8">
+        <p className="text-[14px] text-[#333] font-[700] uppercase">{profile.name}'s recent updates</p>
+        { updates.map((update, index) => {
+            return (
+              <div key={index}>
+                <UpdateCard update={update} />
+              </div>
+            )
+          })
+        }
       </div>
     </div>
   )

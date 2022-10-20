@@ -14,7 +14,7 @@ export const ReviewsList = ({id}) => {
     );
     const reviewsRef = await getDocs(q)
     setReviews(reviewsRef.docs)
-  }, [id]) 
+  }, [id])
 
   useEffect(() => {
     fetchReviews();
