@@ -1,5 +1,6 @@
-import { collection, doc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { auth, db } from "../config/firebase";
 import { StarRating } from "./StarRating";
@@ -9,6 +10,7 @@ export const ReviewEdit = () => {
   const [text, setText] = useState([]);
   const [book, setBook] = useState(null);
   const { id } = useParams();
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,33 +34,136 @@ export const ReviewEdit = () => {
   const fetchReview = useCallback(async() => {
     const q = query(
       collection(db, 'reviews'), 
-      where('user', '==', auth.currentUser.uid),
+      where('user', '==', user.uid),
       where('book', '==', id)
       )
-    const docs = await getDocs(q)
-    docs.forEach((doc) => {
+    const qSnap = await getDocs(q)
+    qSnap.forEach((doc) => {
       if (doc.exists) {
         setRating(doc.data().rating)
         setText(doc.data().text)
       }
     })
- 
-  }, [id])
+  }, [user, id])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newReviewRef = doc(collection(db, 'reviews'))
-    await setDoc(newReviewRef, {
+    const reviewsQ = query(
+      collection(db, 'reviews'),
+      where('book', '==', id),
+      where('user', '==', user.uid))
+    const reviewsQSnap = await getDocs(reviewsQ);
+    let reviewDocRef;
+    let reviewDoc;
+    reviewsQSnap.docs.forEach(async (document) => {
+      reviewDocRef = doc(db, 'reviews', document.id)
+      reviewDoc = await getDoc(reviewDocRef)
+    });
+    
+    const ratingsQ = query(
+      collection(db, 'ratings'), 
+      where('book', '==', id),
+      where('user', '==', user.uid))
+    const ratingsQSnap = await getDocs(ratingsQ)
+    let ratingDocRef;
+    let ratingDoc;
+    ratingsQSnap.docs.map(async (document) => {
+      ratingDocRef = doc(db, 'ratings', document.id)
+      ratingDoc = await getDoc(ratingDocRef)
+    });
+
+    if (text.length > 0 && reviewDoc === undefined) addReview(); 
+    if (text.length > 0 && reviewDoc !== undefined) updateReview(reviewDocRef); 
+    if (rating && ratingDoc === undefined) addRating();
+    if (rating && ratingDoc !== undefined) updateRating(ratingDocRef);
+
+    navigate(`/books/${id}`);
+  }
+
+  const addReview = async () => {
+    const newReviewRef = doc(collection(db, 'reviews'));
+    const reviewData = {
+      desc: 'reviewed a book',
       book: id,
-      user: auth.currentUser.uid,
-      userName: auth.currentUser.displayName,
-      userIcon: auth.currentUser.photoURL,
+      user: user.uid,
+      userName: user.displayName,
+      userIcon: user.photoURL,
       rating: rating,
       text: text,
       likes: [0],
       added: serverTimestamp()
-    })  
-    navigate(`/books/${id}`)
+    }
+    await setDoc(newReviewRef, reviewData)
+    updateFeed(reviewData);
+  }
+
+  const updateReview = async (docRef) => {
+    const reviewData = {
+      desc: 'updated a review',
+      book: id,
+      user: user.uid,
+      userName: user.displayName,
+      userIcon: user.photoURL,
+      rating: rating,
+      text: text,
+      likes: [0],
+      added: serverTimestamp()
+    }
+    await setDoc(docRef, reviewData)
+    updateFeed(reviewData);
+  }
+
+  const addRating = async () => {
+    const newRatingRef = doc(collection(db, 'ratings'));
+    const ratingData = {
+      desc: 'rated a book',
+      book: id,
+      user: user.uid,
+      userName: user.displayName,
+      userIcon: user.photoURL,
+      rating: rating,
+      added: serverTimestamp()
+    }
+    await setDoc(newRatingRef, ratingData)
+    if (text.length === 0) {
+      updateFeed(ratingData);
+      console.log('activity feed updated')
+    }
+  }
+
+  const updateRating = async (docRef) => {
+    const ratingData = {
+      desc: 'rated a book',
+      book: id,
+      user: user.uid,
+      userName: user.displayName,
+      userIcon: user.photoURL,
+      rating: rating,
+      added: serverTimestamp()
+    }
+    const ratingRef = doc(db, 'ratings', docRef)
+    await updateDoc(ratingRef, ratingData)
+    if (text.length === 0) {
+      updateFeed(ratingData);
+      console.log('activity feed updated')
+    }
+  }
+
+  const updateFeed = async (update) => {
+    const newUpdateRef = doc(collection(db, 'updates'));
+    await setDoc(newUpdateRef, {
+      userId: user.uid,
+      userName: user.displayName,
+      userIcon: user.photoURL,
+      desc: update.desc,
+      ...rating && { rating: update.rating },
+      bookId: id,
+      bookCover: book.imageLinks.thumbnail,
+      bookTitle: book.title,
+      ...book.subtitle && { bookSubtitle: book.subtitle },
+      bookAuthors: book.authors,
+      added: serverTimestamp()
+    })
   }
 
   useEffect(() => {
@@ -67,11 +172,11 @@ export const ReviewEdit = () => {
   }, [fetchBook, fetchReview])
 
   return (
-    <div id="reviewEditContainer" className="flex flex-col h-screen w-8/12">
+    <div id="reviewEditContainer" className="flex flex-col items-center h-screen w-3/5">
       { book
         ? <div 
             id="reviewEditHeader" 
-            className="flex flex-row p-2 m-2">
+            className="flex flex-row p-2 m-2 w-full">
             <Link to={`/books/${id}`}>
               <img 
                 src={book.imageLinks.thumbnail} 
@@ -103,7 +208,7 @@ export const ReviewEdit = () => {
           </div>
         : null
       }
-      <div id="reviewEditBody" className="flex flex-col m-2 p-2 h-screen">
+      <div id="reviewEditBody" className="flex flex-col m-2 p-2 w-full h-screen">
         <div id="reviewRating" className="flex flex-row gap-1 items-center mb-2">
           <span>My rating:</span>
           <StarRating rating={rating} onRatingSelect={onRatingSelect} />

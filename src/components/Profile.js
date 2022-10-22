@@ -40,7 +40,7 @@ export const Profile = () => {
   }, [syncProfile, syncShelves, syncUpdates])
 
   return (
-    <div id="profileContainer" className="flex flex-col h-screen items-center gap-8">
+    <div id="profileContainer" className="flex flex-col h-auto items-center gap-8">
       <div id="profileHeader" className="flex flex-row mb-10 gap-4">
         { profile 
           ? <>
@@ -110,8 +110,8 @@ export const Profile = () => {
           }
         </div>
       </div>
-      <div id="updates" className="flex flex-col gap-8 w-3/8">
-        <p className="text-[14px] text-[#333] font-[700] uppercase">{profile.name}'s recent updates</p>
+      <div id="updates" className="flex flex-col gap-8 w-3/8 h-auto">
+        <p className="text-[14px] text-[#333] font-[700] uppercase">{profile != null ? profile.name : ''}'s recent updates</p>
         { updates.map((update, index) => {
             return (
               <div key={index}>

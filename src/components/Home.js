@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link } from "react-router-dom";
@@ -19,12 +19,11 @@ export const Home = () => {
   const syncUpdates = useCallback(async() => {
     const q = query(
       collection(db, 'updates'),
-      where('userId', '==', user.uid),
       orderBy('added', 'desc')
     )
     const response = await getDocs(q)
     setUpdates(response.docs)
-  }, [user])
+  }, [])
 
   useEffect(() => {
     syncShelves();

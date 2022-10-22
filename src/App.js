@@ -39,7 +39,7 @@ function App() {
   }, [fetchBooks])
 
   return (
-    <div className="bg-[rgba(244,241,234,0.5)] w-screen">
+    <div className="bg-[rgba(244,241,234,0.5)] flex flex-col items-center w-screen">
       { user 
         ? <Router>
             <Nav onSubmit={onSubmit}/>

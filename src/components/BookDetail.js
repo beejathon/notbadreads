@@ -1,10 +1,14 @@
+import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { db } from "../config/firebase";
 import { ReviewsList } from "./ReviewsList";
 
 export const BookDetail = () => {
   const [book, setBook] = useState(null);
   const { id } = useParams();
+  const [ratingsCount, setRatingsCount] = useState(null)
+  const [avgRating, setAvgRating] = useState(null);
 
   const fetchBook = useCallback(async() => {
     const apiKey = 'AIzaSyAIVABDn3ZZJIiSt3HhDgtZPa3hcueYqKw'
@@ -14,13 +18,58 @@ export const BookDetail = () => {
     const data = await response.json();
     setBook(data.volumeInfo)
   }, [id])
+
+  const syncRating = useCallback(async () => {
+    const q = query(
+      collection(db, 'ratings'),
+      where('book', '==', id))
+    const qSnap = await getDocs(q);
+
+    if (book) {
+      // get number of ratings
+      const n = qSnap.docs.length;
+      const m = book.ratingsCount;
+      // if both exist, sync ratings from google books and firebase
+      if (qSnap.docs.length > 0 && book.averageRating) {
+        // get firebase average
+        const a = qSnap.docs.reduce((prev, curr) => {
+          return prev += curr.data().rating;
+        }, 0) / n;
+        // get google books average
+        const b = book.averageRating;
+        // get weighted average
+        const weightedAvg = ((n/(m+n))*a) + ((m/(m+n))*b)
+        const roundedAvg = Math.round(weightedAvg*10)/10
+        setRatingsCount(n + m)
+        setAvgRating(parseFloat(roundedAvg))
+      }
+      // sync ratings from firebase only if no google books ratings
+      if (qSnap.docs.length > 0 && !book.averageRating) {
+        const a = qSnap.docs.reduce((prev, curr) => {
+          return prev += curr.data().rating;
+        }, 0) / qSnap.docs.length;
+        const avg = Math.round((a/n)*10)/10
+        setAvgRating(avg)
+        setRatingsCount(n)
+      }
+      // sync ratings from google books only if no firebase ratings
+      if (qSnap.docs.length === 0 && book.averageRating !== undefined) {
+        setAvgRating(book.averageRating)
+        setRatingsCount(m)
+      }
+    }
+  }, [book, id])
   
   useEffect(() => {
     fetchBook()
   }, [fetchBook])
 
+  useEffect(() => {
+    syncRating();
+  }, [syncRating])
+
   return (
-    <div id="bookContainer" className="flex flex-col w-screen items-center">
+    <div id="bookContainer" className="flex flex-col w-screen items-center h-auto">
       { book 
         ? <div className="flex flex-row w-8/12">
             <div className="w-full justify-center">
@@ -58,14 +107,14 @@ export const BookDetail = () => {
                     {[...Array(5)].map((star, index) => {
                       index +=1;
                       return (
-                      <span id={star} className={index <= book.averageRating ? "text-[#fc7600] text-2xl -mr-[4px]" : "text-[#ccc] text-2xl -mr-[4px]"}>&#9733;</span>
+                      <span id={star} className={index <= avgRating ? "text-[#fc7600] text-2xl -mr-[4px]" : "text-[#ccc] text-2xl -mr-[4px]"}>&#9733;</span>
                       )
                     })}
                   </div>
                 }
                 <span className="mx-2 text-[12px] text-[#999999]">
-                  {book.averageRating ? `— ${book.averageRating} avg rating ` :'— No ratings'}
-                  {book.ratingsCount ? `— ${book.ratingsCount} ratings` : null}
+                  {avgRating ? `— ${avgRating} avg rating ` :'— No ratings'}
+                  {ratingsCount ? `— ${ratingsCount} ratings` : null}
                 </span>  
               </div>
               <div 

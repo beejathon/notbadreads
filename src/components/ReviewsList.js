@@ -12,8 +12,8 @@ export const ReviewsList = ({id}) => {
       where('book', '==', id),
       orderBy('added')
     );
-    const reviewsRef = await getDocs(q)
-    setReviews(reviewsRef.docs)
+    const response = await getDocs(q)
+    setReviews(response.docs)
   }, [id])
 
   useEffect(() => {

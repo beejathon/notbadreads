@@ -44,7 +44,7 @@ export const BookButton = (
         id: id,
         cover: cover,
         title: title,
-        subtitle: subtitle,
+        ...subtitle && { subtitle: subtitle },
         author: authors,
         shelf: ['Read', 'Favorites'],
         read: serverTimestamp(),
@@ -56,7 +56,7 @@ export const BookButton = (
         id: id,
         cover: cover,
         title: title,
-        subtitle: subtitle,
+        ...subtitle && { subtitle: subtitle },
         author: authors,
         shelf: [shelf],
         read: serverTimestamp(),
@@ -68,7 +68,7 @@ export const BookButton = (
         id: id,
         cover: cover,
         title: title,
-        subtitle: subtitle,
+        ...subtitle && { subtitle: subtitle },
         author: authors,
         shelf: [shelf],
         added: serverTimestamp()
@@ -127,7 +127,7 @@ export const BookButton = (
         bookId: id,
         bookCover: cover,
         bookTitle: title,
-        bookSubtitle: subtitle,
+        ...subtitle && { bookSubtitle: subtitle },
         bookAuthors: authors,
         added: serverTimestamp()
       }
@@ -141,6 +141,7 @@ export const BookButton = (
         bookId: id,
         bookCover: cover,
         bookTitle: title,
+        ...subtitle && { bookSubtitle: subtitle },
         bookSubtitle: subtitle,
         bookAuthors: authors,
         added: serverTimestamp()
