@@ -33,20 +33,20 @@ export const ProfileMenu = () => {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-center pl-4 pr-4 absolute right-0 hover:bg-[#382110] h-full">
+    <div className="flex flex-col items-center justify-center pl-4 pr-4 h-full">
       <div 
         onClick={toggleMenu}>
         <img 
           src={userIcon || placeholder }
           alt="profile pic"
-          className="rounded-full w-9"
+          className="rounded-full p-1"
         />    
       </div>
-      <div className="relative w-full">
+      <div className="relative w-full bg-white">
         <div 
           className=
           { clicked 
-            ? 'absolute right-[-20px] top-[10px] flex flex-col w-[250px] gap-2 p-2 rounded-sm border-[0.8px] items-left bg-[#FFFFFF]'
+            ? 'absolute right-[-20px] top-[10px] flex flex-col w-[250px] gap-2 p-2 rounded-sm border-[0.8px] items-left bg-[#FFFFFF] opacity-100'
             : 'hidden'
           } 
           onMouseLeave={toggleMenu}

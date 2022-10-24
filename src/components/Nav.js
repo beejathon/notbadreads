@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { NavFriendsButton } from "./NavFriendsButton";
 import { ProfileMenu } from "./ProfileMenu";
 import { SearchBar } from "./SearchBar";
 
@@ -12,11 +13,14 @@ export const Nav = ({onSubmit}) => {
           <span className="logo-right">reads</span>
         </Link>  
       </div>
-      <nav className="flex flex-row flex-grow items-center h-full place-self-end place-content-center relative">
+      <nav className="flex flex-row flex-grow items-center h-full place-content-center relative">
         <Link to='/'><div className="hover:bg-[#382110] hover:text-white text-[#382110] h-full pt-4 pb-4 pl-6 pr-6">Home</div></Link>
         <Link to='/'><div className="hover:bg-[#382110] hover:text-white text-[#382110] h-full pt-4 pb-4 pl-6 pr-6">My Books</div></Link>
         <SearchBar submit={onSubmit}/>
-        <ProfileMenu />
+        <div className="flex flex-row items-center h-full m-0 absolute right-0">
+          <NavFriendsButton />
+          <ProfileMenu />
+        </div>
       </nav>
     </header>
   )

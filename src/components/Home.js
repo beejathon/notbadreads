@@ -35,10 +35,10 @@ export const Home = () => {
       <div id="aside" className="flex flex-col">
         <div id="reading" className="flex flex-col gap-4">
           <p className="uppercase font-[700] text-[#333] text-[14px]">Currently reading</p>
-          { shelves.map((book, index) => {
+          { shelves.map((book) => {
             if (book.data().shelf[0] === 'Currently reading') {
               return (
-                <div key={index}>
+                <div key={book.data().added}>
                   <Link to={`/books/${book.data().id}`}>
                     <img
                       className="w-26" 
@@ -59,9 +59,9 @@ export const Home = () => {
       </div>
       <div id="updates" className="flex flex-col gap-8 w-3/8">
         <p className="text-[14px] text-[#333] font-[700] uppercase">Updates</p>
-        { updates.map((update, index) => {
+        { updates.map((update) => {
             return (
-              <div key={index}>
+              <div key={update.data().id}>
                 <UpdateCard update={update} />
               </div>
             )

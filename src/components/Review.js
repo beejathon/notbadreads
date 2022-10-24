@@ -30,7 +30,9 @@ export const Review = ({review}) => {
                   })}
                 </>
               }
-              <span className="absolute right-0 text-[14px] text-[#bbbbbb]"> {new Date(review.added.seconds * 1000).toLocaleDateString("en-US")}</span>
+              <span className="absolute right-0 text-[14px] text-[#bbbbbb]">
+                {review.added && new Date(review.added.seconds * 1000).toLocaleDateString("en-US")}
+              </span>
             </div>
             <div id="reviewBody" className="mt-4 mb-4 whitespace-pre-line">
               {review.text}

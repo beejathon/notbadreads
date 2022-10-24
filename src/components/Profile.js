@@ -1,15 +1,18 @@
 import { collection, doc, getDoc, getDocs, orderBy, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import placeholder from "../assets/profile_icon.png"
 import { UpdateCard } from "./UpdateCard";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { AddFriendButton } from "./AddFriendButton";
 
 export const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [shelves, setShelves] = useState([]);
   const [updates, setUpdates] = useState([]);
   const {id} = useParams();
+  const [user] = useAuthState(auth);
 
   const syncProfile = useCallback(async () => {
     const docRef = doc(db, 'users', id)
@@ -64,15 +67,16 @@ export const Profile = () => {
           : <div>Loading...</div>
         }
       </div>
+      { user.uid === id ? null : <AddFriendButton id={id} /> }
       <div id="shelvesContainer" className="flex flex-col gap-4">
         <p className="uppercase font-[700] text-[12px]">
           {profile != null ? profile.name: ''}'s favorite books
         </p>
         <div id="favorites" className="flex flex-row gap-2">
-          { shelves.map((book, index) => {
+          { shelves.map((book) => {
               if (book.data().shelf.length > 1) {
                 return (
-                  <span key={index}>
+                  <span key={book.data().added}>
                     <Link to={`/books/${book.data().id}`}>
                       <img
                         className="h-60" 
@@ -91,10 +95,10 @@ export const Profile = () => {
           {profile != null ? profile.name : ''} is currently reading
         </p>
         <div id="currentlyReading" className="flex flex-row gap-2">
-          { shelves.map((book, index) => {
+          { shelves.map((book) => {
               if (book.data().shelf[0] === 'Currently reading') {
                 return (
-                  <span key={index}>
+                  <span key={book.data().added}>
                     <Link to={`/books/${book.data().id}`}>
                       <img
                         className="h-60" 

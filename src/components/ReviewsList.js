@@ -21,7 +21,7 @@ export const ReviewsList = ({id}) => {
   }, [fetchReviews])
 
   return (
-    <div id="reviewsContainer" className="flex flex-col h-full w-screen items-center">
+    <div id="reviewsContainer" className="flex flex-col h-auto w-screen items-center">
       { reviews?.map((review) => {
           return <Review key={review.data().id} review={review.data()} />
         })

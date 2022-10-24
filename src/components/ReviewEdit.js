@@ -23,10 +23,10 @@ export const ReviewEdit = () => {
   }
 
   const fetchBook = useCallback(async() => {
-    const apiKey = 'AIzaSyAIVABDn3ZZJIiSt3HhDgtZPa3hcueYqKw'
-    const response = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${id}?key=${apiKey}`
-    )
+    const apiKey = 'AIzaSyCCR3kcDEtKZO_rpIDBwJaLgrIfsRAMdlA'
+    let url = 'https://www.googleapis.com/books/v1/volumes/';
+    url += `${id}?key=${apiKey}`
+    const response = await fetch(url, {mode: 'cors'})
     const data = await response.json();
     setBook(data.volumeInfo)
   }, [id])

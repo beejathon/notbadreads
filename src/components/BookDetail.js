@@ -11,10 +11,10 @@ export const BookDetail = () => {
   const [avgRating, setAvgRating] = useState(null);
 
   const fetchBook = useCallback(async() => {
-    const apiKey = 'AIzaSyAIVABDn3ZZJIiSt3HhDgtZPa3hcueYqKw'
-    const response = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${id}?key=${apiKey}`
-    )
+    const apiKey = 'AIzaSyCCR3kcDEtKZO_rpIDBwJaLgrIfsRAMdlA'
+    let url = 'https://www.googleapis.com/books/v1/volumes/';
+    url += `${id}?key=${apiKey}`
+    const response = await fetch(url, {mode: 'cors'})
     const data = await response.json();
     setBook(data.volumeInfo)
   }, [id])
@@ -69,17 +69,15 @@ export const BookDetail = () => {
   }, [syncRating])
 
   return (
-    <div id="bookContainer" className="flex flex-col w-screen items-center h-auto">
+    <div id="bookContainer" className="flex flex-col w-screen items-center">
       { book 
-        ? <div className="flex flex-row w-8/12">
-            <div className="w-full justify-center">
-              <Link to={`books/${id}`}>
-                <img 
-                  src={book.imageLinks.thumbnail} 
-                  alt={book.title} 
-                  className="object-scale-down leading-none place-self-start shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
-                />
-              </Link>
+        ? <div className="flex flex-row w-8/12 gap-4">
+            <div className="w-full">
+              <img 
+                src={book.imageLinks.thumbnail} 
+                alt={book.title} 
+                className="object-scale-down leading-none place-self-start shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
+              />
             </div>
             <div className="flex flex-col">
               <div>
@@ -94,9 +92,9 @@ export const BookDetail = () => {
                 : <div className="text-xl">by 
                     {book.authors.map((author, index, array) => {
                       if (index === array.length - 1) {
-                        return <span key={index}> {author}</span>
+                        return <span key={index + author}> {author}</span>
                       } else {
-                        return <span key={index}> {author}, </span>
+                        return <span key={index + author}> {author}, </span>
                       }
                     })}
                   </div>
@@ -107,7 +105,7 @@ export const BookDetail = () => {
                     {[...Array(5)].map((star, index) => {
                       index +=1;
                       return (
-                      <span id={star} className={index <= avgRating ? "text-[#fc7600] text-2xl -mr-[4px]" : "text-[#ccc] text-2xl -mr-[4px]"}>&#9733;</span>
+                      <span key={index} id={star} className={index <= avgRating ? "text-[#fc7600] text-2xl -mr-[4px]" : "text-[#ccc] text-2xl -mr-[4px]"}>&#9733;</span>
                       )
                     })}
                   </div>

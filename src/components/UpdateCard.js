@@ -27,7 +27,7 @@ export const UpdateCard = ({update}) => {
               {[...Array(5)].map((star, index) => {
                 index +=1;
                 return (
-                <span id={star} className={index <= update.data().rating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
+                <span key={index} id={star} className={index <= update.data().rating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
                 )
               })}
             </div>
@@ -55,9 +55,9 @@ export const UpdateCard = ({update}) => {
             : <div>by 
                 {update.data().bookAuthors.map((author, index, array) => {
                   if (index === array.length - 1) {
-                    return <span key={index}> {author}</span>
+                    return <span key={update.data().id}> {author}</span>
                   } else {
-                    return <span key={index}> {author}, </span>
+                    return <span key={update.data().id}> {author}, </span>
                   }
                 })}
               </div>

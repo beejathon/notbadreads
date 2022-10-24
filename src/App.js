@@ -14,6 +14,7 @@ import { SignIn } from "./components/SignIn";
 import { BookDetail } from "./components/BookDetail";
 import { ReviewEdit } from "./components/ReviewEdit";
 import { Profile } from "./components/Profile";
+import { Friends } from "./components/Friends";
 
 function App() {
   const [terms, setTerms] = useState([])
@@ -21,10 +22,13 @@ function App() {
   const [user] = useAuthState(auth);
 
   const fetchBooks = useCallback(async() => {
-    const apiKey = 'AIzaSyAIVABDn3ZZJIiSt3HhDgtZPa3hcueYqKw'
-    const response = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${terms}&orderBy=relevance&maxResults=10&key=${apiKey}`, {mode: 'cors'}
-    )
+    const apiKey = 'AIzaSyCCR3kcDEtKZO_rpIDBwJaLgrIfsRAMdlA'
+    let url = 'https://www.googleapis.com/books/v1/volumes?'
+    url += `q=${terms}`
+    url += '&orderBy=relevance&maxResults=10'
+    url += `&fields=items(id, volumeInfo)`
+    url += `&key=${apiKey}`
+    const response = await fetch(url, {mode: 'cors'})
     const data = await response.json();
     const items = await cleanData(data.items)
     setBooks(items)
@@ -39,7 +43,7 @@ function App() {
   }, [fetchBooks])
 
   return (
-    <div className="bg-[rgba(244,241,234,0.5)] flex flex-col items-center w-screen">
+    <div className="bg-[rgba(244,241,234,0.5)] flex flex-col items-center w-screen h-auto">
       { user 
         ? <Router>
             <Nav onSubmit={onSubmit}/>
@@ -49,6 +53,7 @@ function App() {
               <Route path="/books/:id" element={<BookDetail />} />
               <Route path="/review/edit/:id" element={<ReviewEdit />} />
               <Route path="/users/:id" element={<Profile />} />
+              <Route path="/friends" element={<Friends />} />
             </Routes>
           </Router>
         : <SignIn />

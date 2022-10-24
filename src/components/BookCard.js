@@ -5,24 +5,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-export const BookCard = ({id}) => {
-  const [book, setBook] = useState(null);
+export const BookCard = ({book}) => {
   const [ratingsCount, setRatingsCount] = useState(null)
   const [avgRating, setAvgRating] = useState(null);
-
-  const fetchBook = useCallback(async() => {
-    const apiKey = 'AIzaSyAIVABDn3ZZJIiSt3HhDgtZPa3hcueYqKw'
-    const response = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${id}?key=${apiKey}`
-    )
-    const data = await response.json();
-    setBook(data.volumeInfo)
-  }, [id])
 
   const syncRating = useCallback(async () => {
     const q = query(
       collection(db, 'ratings'),
-      where('book', '==', id))
+      where('book', '==', book.id))
     const qSnap = await getDocs(q);
 
     if (book) {
@@ -58,11 +48,7 @@ export const BookCard = ({id}) => {
         setRatingsCount(m)
       }
     }
-  }, [book, id])
-
-  useEffect(() => {
-    fetchBook();
-  }, [fetchBook])
+  }, [book])
 
   useEffect(() => {
     syncRating();
@@ -72,7 +58,7 @@ export const BookCard = ({id}) => {
     <div className="flex flex-row m-2">
       { book ? 
         <>
-          <Link to={`/books/${id}`}>
+          <Link to={`/books/${book.id}`}>
             <img 
               src=
                 { book.imageLinks === undefined
@@ -80,15 +66,16 @@ export const BookCard = ({id}) => {
                   : book.imageLinks.thumbnail
                 } 
               alt={book.title}
+              className="w-40 shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
           />
           </Link>
           <div className='m-2'>
             <div>
-              <Link to={`/books/${id}`}>
-                <span>{book.title}</span>
+              <Link to={`/books/${book.id}`}>
+                <span className='font-[700]'>{book.title}</span>
                 { book.subtitle === undefined 
                   ? ''
-                  : <span>: {book.subtitle}</span>
+                  : <span className='font-[700]'>: {book.subtitle}</span>
                 }
               </Link>
             </div>
@@ -97,9 +84,9 @@ export const BookCard = ({id}) => {
               : <div>by 
                   {book.authors.map((author, index, array) => {
                     if (index === array.length - 1) {
-                      return <span key={index}> {author}</span>
+                      return <span key={author+book.id}> {author}</span>
                     } else {
-                      return <span key={index}> {author}, </span>
+                      return <span key={author+book.id}> {author}, </span>
                     }
                   })}
                 </div>
@@ -110,7 +97,7 @@ export const BookCard = ({id}) => {
                   {[...Array(5)].map((star, index) => {
                     index +=1;
                     return (
-                    <span id={star} className={index <= avgRating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
+                    <span key={index} id={star} className={index <= avgRating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
                     )
                   })}
                 </div>
@@ -121,11 +108,11 @@ export const BookCard = ({id}) => {
               </span>  
             </div>
             <BookButton 
-              cover={book.imageLinks.thumbnail}
+              cover={book.imageLinks && book.imageLinks.thumbnail}
               title={book.title}
               subtitle={book.subtitle}
               authors={book.authors} 
-              id={id} />
+              id={book.id} />
           </div>
         </>
         : <div>Loading...</div>
