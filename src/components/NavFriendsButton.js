@@ -6,7 +6,6 @@ import { auth, db } from "../config/firebase";
 
 export const NavFriendsButton = () => {
   const [pending, setPending] = useState(null);
-  const [requests, setRequests] = useState([]);
   const [user] = useAuthState(auth);
 
   const fetchRequests = useCallback(async () => {
@@ -17,7 +16,6 @@ export const NavFriendsButton = () => {
     )
 
     const qSnap = await getDocs(q)
-    setRequests(qSnap.docs)
     if (qSnap.docs.length > 0) setPending(qSnap.docs.length)
   }, [user]) 
 

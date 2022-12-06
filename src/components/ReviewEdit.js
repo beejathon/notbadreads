@@ -39,7 +39,7 @@ export const ReviewEdit = () => {
       )
     const qSnap = await getDocs(q)
     qSnap.forEach((doc) => {
-      if (doc.exists) {
+      if (doc.exists()) {
         setRating(doc.data().rating)
         setText(doc.data().text)
       }
