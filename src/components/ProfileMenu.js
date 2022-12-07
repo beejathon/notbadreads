@@ -33,12 +33,13 @@ export const ProfileMenu = () => {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-center pl-4 pr-4 h-full">
+    <div className="cursor-pointer flex flex-col items-center justify-center pl-4 pr-4 h-full">
       <div 
         onClick={toggleMenu}>
         <img 
           src={userIcon || placeholder }
           alt="profile pic"
+          referrerPolicy="no-referrer"
           className="rounded-full p-1"
         />    
       </div>
@@ -57,7 +58,6 @@ export const ProfileMenu = () => {
           <Link to={`users/${auth.currentUser.uid}`}>
             <div className="text-[15px] hover:underline cursor-pointer">Profile</div>
           </Link>
-          <div className="text-[15px] hover:underline cursor-pointer">Friends</div>
           <div className="text-[15px] hover:underline cursor-pointer border-t-[0.8px] w-100">Account settings</div>
           <div className="text-[15px] hover:underline cursor-pointer" onClick={signOutUser}>Sign Out</div>
         </div>

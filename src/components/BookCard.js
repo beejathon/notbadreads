@@ -56,7 +56,7 @@ export const BookCard = ({book}) => {
 
   return (
     <div className="flex flex-row m-2">
-      { book ? 
+      { book ? (
         <>
           <Link to={`/books/${book.id}`}>
             <img 
@@ -67,7 +67,7 @@ export const BookCard = ({book}) => {
                 } 
               alt={book.title}
               className="w-40 shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
-          />
+            />
           </Link>
           <div className='m-2'>
             <div>
@@ -79,18 +79,19 @@ export const BookCard = ({book}) => {
                 }
               </Link>
             </div>
-            { book.authors.length === 1
-              ? <div>by <span>{book.authors[0]}</span></div>
-              : <div>by 
-                  {book.authors.map((author, index, array) => {
-                    if (index === array.length - 1) {
-                      return <span key={author+book.id}> {author}</span>
-                    } else {
-                      return <span key={author+book.id}> {author}, </span>
-                    }
-                  })}
-                </div>
-              }
+            { book.authors.length === 1 ? (
+              <div>by <span>{book.authors[0]}</span></div>
+            ) : (
+              <div>by 
+                {book.authors.map((author, index, array) => {
+                  if (index === array.length - 1) {
+                    return <span key={author+book.id}> {author}</span>
+                  } else {
+                    return <span key={author+book.id}> {author}, </span>
+                  }
+                })}
+              </div>
+            )}
             <div className="flex flex-row p-2 items-center">
               { 
                 <div className="flex flex-row gap-1">
@@ -115,8 +116,9 @@ export const BookCard = ({book}) => {
               id={book.id} />
           </div>
         </>
-        : <div>Loading...</div>
-      }
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   )
 }

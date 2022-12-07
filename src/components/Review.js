@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Review = ({review}) => {
   return (
     <div id="reviewContainer" className="flex flex-row m-4 h-full w-3/5">
-      { review ?
+      { review ? (
         <>
           <div id="reviewLeft" className="content-start">
             <Link to={`/users/${review.user}`}>
@@ -21,14 +21,15 @@ export const Review = ({review}) => {
                 <span className="font-bold text-[#00635d]">{review.userName}</span>
               </Link>
               <span>rated it</span>
-              { <>
-                  {[...Array(5)].map((star, index) => {
-                    index +=1;
-                    return (
-                    <span key={index} id={star} className={index <= review.rating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
-                    )
-                  })}
-                </>
+              { 
+              <>
+                {[...Array(5)].map((star, index) => {
+                  index +=1;
+                  return (
+                  <span key={index} id={star} className={index <= review.rating ? "text-[#fc7600] text-xl -mr-[6px]" : "text-[#ccc] text-xl -mr-[6px]"}>&#9733;</span>
+                  )
+                })}
+              </>
               }
               <span className="absolute right-0 text-[14px] text-[#bbbbbb]">
                 {review.added && new Date(review.added.seconds * 1000).toLocaleDateString("en-US")}
@@ -44,8 +45,9 @@ export const Review = ({review}) => {
             </div>
           </div>
         </>
-        : <div>Loading</div>
-      }
+      ) : (
+        <div>Loading</div>
+      )}
     </div>
   )
 }

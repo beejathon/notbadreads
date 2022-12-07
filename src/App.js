@@ -15,11 +15,13 @@ import { BookDetail } from "./components/BookDetail";
 import { ReviewEdit } from "./components/ReviewEdit";
 import { Profile } from "./components/Profile";
 import { Friends } from "./components/Friends";
+import { MyBooks } from "./components/MyBooks";
 
 function App() {
   const [terms, setTerms] = useState([])
   const [books, setBooks] = useState([])
   const [user] = useAuthState(auth);
+  const [count, setCount] = useState(0);
 
   const fetchBooks = useCallback(async() => {
     const apiKey = 'AIzaSyCCR3kcDEtKZO_rpIDBwJaLgrIfsRAMdlA'
@@ -38,6 +40,10 @@ function App() {
    setTerms(data)
   }
 
+  const resetNav = () => {
+    setCount(count + 1)
+  }
+
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks])
@@ -46,14 +52,15 @@ function App() {
     <div className="bg-[rgba(244,241,234,0.5)] flex flex-col items-center w-screen h-auto">
       { user 
         ? <Router>
-            <Nav onSubmit={onSubmit}/>
+            <Nav key={count} onSubmit={onSubmit}/>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/mybooks" element={<MyBooks />} />
               <Route path="/search" element={<SearchList books={books} />} />
               <Route path="/books/:id" element={<BookDetail />} />
               <Route path="/review/edit/:id" element={<ReviewEdit />} />
               <Route path="/users/:id" element={<Profile />} />
-              <Route path="/friends" element={<Friends />} />
+              <Route path="/friends" element={<Friends resetNav={resetNav} />} />
             </Routes>
           </Router>
         : <SignIn />

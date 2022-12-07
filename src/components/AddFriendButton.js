@@ -39,7 +39,6 @@ export const AddFriendButton = ({id}) => {
     await setDoc(newFriendsRef, {
       pending: true,
       accepted: false,
-      rejected: false,
       requestedBy: user.uid,
       requestedFrom: id,
       [user.uid]: true,

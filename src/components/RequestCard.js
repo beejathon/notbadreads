@@ -12,7 +12,7 @@ export const RequestCard = ({request, onAccept, onReject}) => {
   }
 
   return (
-    <div id="requestCard" className="flex flex-row gap-2">
+    <div id="requestCard" className="flex flex-row gap-4 bg-white border-[#D8D8D8] items-center border-[1px] p-4">
       <div id="cardLeft">
         <Link to={`users/${request.id}`}>
           <img src={request.icon || placeholder} alt="user icon" />

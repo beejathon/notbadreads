@@ -20,12 +20,21 @@ export const UpdateCard = ({update}) => {
       <div id="updateContainer" className="flex flex-col w-full gap-2 bg-white border-[#D8D8D8] border-[1px] p-4">
         <div id="updateHeader" className="flex flex-row gap-2 items-center justify-left w-full relative">
           <Link to={`/users/${update.data().requesteeId}`}>
-            <img src={update.data().requesteeIcon || placeholder} alt="user icon" className="rounded-full w-10 absolute -ml-10 -mt-5"/>
+            <img 
+              src={update.data().requesteeIcon || placeholder} 
+              alt="user icon" 
+              referrerPolicy="no-referrer"
+              className="rounded-full w-10 absolute -ml-10 -mt-5"/>
           </Link>
-          <span>{update.data().requestee} {update.data().desc}</span>
+          <span>{update.data().requestee}</span>
+          <span>{update.data().desc}</span>
           <span>{update.data().requester}</span>
           <Link to={`/users/${update.data().requesterId}`}>
-            <img src={update.data().requesterIcon || placeholder} alt="user icon" className="rounded-full w-10"/>
+            <img 
+            src={update.data().requesterIcon || placeholder} 
+            alt="user icon"
+            referrerPolicy="no-referrer"
+            className="rounded-full w-10"/>
           </Link>
           <div className="text-[#767676] text-[14px] absolute right-2">
             {parseInt((currentTime - update.data().added.toDate())/3600000)}h

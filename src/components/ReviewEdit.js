@@ -173,41 +173,43 @@ export const ReviewEdit = () => {
 
   return (
     <div id="reviewEditContainer" className="flex flex-col items-center h-screen w-3/5">
-      { book
-        ? <div 
-            id="reviewEditHeader" 
-            className="flex flex-row p-2 m-2 w-full">
-            <Link to={`/books/${id}`}>
-              <img 
-                src={book.imageLinks.thumbnail} 
-                alt={book.title} 
-                className="object-scale-down leading-none"
-              />
-            </Link>
-            <div className="flex flex-col m-2">
-              <div>
-                <span className="text-2xl font-bold">{book.title}</span>
-                { book.subtitle === undefined 
-                  ? ''
-                  : <span className="text-2xl font-bold">: {book.subtitle}</span>
-                }
-              </div>
-              { book.authors.length === 1
-                ? <div className="text-xl">by <span>{book.authors[0]}</span></div>
-                : <div className="text-xl">by 
-                    {book.authors.map((author, index, array) => {
-                      if (index === array.length - 1) {
-                        return <span key={index}> {author}</span>
-                      } else {
-                        return <span key={index}> {author}, </span>
-                      }
-                    })}
-                  </div>
+      { book ? (
+        <div 
+          id="reviewEditHeader" 
+          className="flex flex-row p-2 m-2 w-full">
+          <Link to={`/books/${id}`}>
+            <img 
+              src={book.imageLinks.thumbnail} 
+              alt={book.title} 
+              className="object-scale-down leading-none"
+            />
+          </Link>
+          <div className="flex flex-col m-2">
+            <div>
+              <span className="text-2xl font-bold">{book.title}</span>
+              { book.subtitle === undefined 
+                ? ''
+                : <span className="text-2xl font-bold">: {book.subtitle}</span>
               }
             </div>
+            { book.authors.length === 1 ? (
+              <div className="text-xl">by <span>{book.authors[0]}</span></div>
+            ) : (
+              <div className="text-xl">by 
+                {book.authors.map((author, index, array) => {
+                  if (index === array.length - 1) {
+                    return <span key={index}> {author}</span>
+                  } else {
+                    return <span key={index}> {author}, </span>
+                  }
+                })}
+              </div>
+            )}
           </div>
-        : null
-      }
+        </div>
+      ) : (
+        null
+      )}
       <div id="reviewEditBody" className="flex flex-col m-2 p-2 w-full h-screen">
         <div id="reviewRating" className="flex flex-row gap-1 items-center mb-2">
           <span>My rating:</span>
