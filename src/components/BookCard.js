@@ -113,7 +113,8 @@ export const BookCard = ({book}) => {
               title={book.title}
               subtitle={book.subtitle}
               authors={book.authors} 
-              id={book.id} />
+              id={book.id} 
+            />
           </div>
         </>
       ) : (

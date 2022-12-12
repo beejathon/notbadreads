@@ -2,6 +2,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { db } from "../config/firebase";
+import { BookButton } from "./BookButton";
 import { ReviewsList } from "./ReviewsList";
 
 export const BookDetail = () => {
@@ -72,11 +73,18 @@ export const BookDetail = () => {
     <div id="bookContainer" className="flex flex-col w-screen items-center">
       { book ? (
         <div className="flex flex-row w-8/12 gap-4">
-          <div className="w-full">
+          <div className="flex flex-col items-center w-full">
             <img 
               src={book.imageLinks.thumbnail} 
               alt={book.title} 
-              className="object-scale-down leading-none place-self-start shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
+              className="object-scale-down leading-none shadow-[0px_5px_5px_0px_rgba(221,221,221)]"
+            />
+            <BookButton 
+              cover={book.imageLinks && book.imageLinks.thumbnail}
+              title={book.title}
+              subtitle={book.subtitle}
+              authors={book.authors} 
+              id={book.id} 
             />
           </div>
           <div className="flex flex-col">

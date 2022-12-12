@@ -23,7 +23,7 @@ export const ReviewsList = ({id}) => {
   return (
     <div id="reviewsContainer" className="flex flex-col h-auto w-screen items-center">
       { reviews?.map((review) => {
-          return <Review key={review.data().id} review={review.data()} />
+          return <Review key={review.data().id} review={review} />
         })
       }
     </div>
