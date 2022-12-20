@@ -50,11 +50,11 @@ function App() {
 
   return (
     <div className="bg-[rgba(244,241,234,0.5)] flex flex-col items-center w-screen h-auto">
-      { user 
-        ? <Router>
+      { user ? (
+        <Router>
             <Nav key={count} onSubmit={onSubmit}/>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/notbadreads" element={<Home />} />
               <Route path="/mybooks" element={<MyBooks />} />
               <Route path="/search" element={<SearchList books={books} />} />
               <Route path="/books/:id" element={<BookDetail />} />
@@ -63,8 +63,9 @@ function App() {
               <Route path="/friends" element={<Friends resetNav={resetNav} />} />
             </Routes>
           </Router>
-        : <SignIn />
-      }
+      ) : (
+        <SignIn />
+      )}
     </div>
   );
 }
